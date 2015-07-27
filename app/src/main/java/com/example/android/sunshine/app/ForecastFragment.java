@@ -1,10 +1,12 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +31,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by Nikhil on 7/5/2015.
@@ -46,16 +46,30 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            FetchWeatherTask task = new FetchWeatherTask();
-            task.execute("07310");
+            updateWeather();
+            return true;
 
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    public void updateWeather()
+    {
+        FetchWeatherTask task = new FetchWeatherTask();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location =  prefs.getString(getString(R.string.prefs_location_key), getString(R.string.prefs_location_default));
+        task.execute(location);
     }
 
     @Override
@@ -77,18 +91,7 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        ArrayList<String> dummyWeatherData = new ArrayList<>();
-
-        dummyWeatherData.add("Today -- Sunny -- 88/63");
-        dummyWeatherData.add("Tommorrow -- Cloudy -- 88/63");
-        dummyWeatherData.add("Wednesday -- Sunny -- 88/63");
-        dummyWeatherData.add("Thursday -- Cloudy -- 88/63");
-        dummyWeatherData.add("Friday -- Cloudy -- 88/63");
-        dummyWeatherData.add("Saturday -- Rainy -- 88/63");
-        dummyWeatherData.add("Sunday -- Sunny -- 88/63");
-
-
-        weatherDataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, dummyWeatherData);
+        weatherDataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, new ArrayList<String>());
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
          ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(weatherDataAdapter);
