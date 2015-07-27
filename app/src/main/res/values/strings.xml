@@ -10,4 +10,12 @@
     <string name="prefs_location_label">Location</string>
     <string name="prefs_location_default" translatable="false">07310</string>
     <string name="prefs_location_key" translatable ="false">location</string>
+    <string name="prefs_unit_label">Units</string>
+    <string name="prefs_unit_metric">metric</string>
+    <string name="prefs_unit_fahrenheit">fahrenheit</string>
+    <string name="prefs_unit_key" translatable ="false">unit</string>
+    <string name="prefs_unit_default" translatable="false">metric</string>
+
+
+
 </resources>
