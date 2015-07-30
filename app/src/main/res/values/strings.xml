@@ -17,6 +17,8 @@
     <string name="prefs_unit_default" translatable="false">metric</string>
     <string name="action_map">Map Location</string>
 
+    <string name="share_menu_title">Share</string>
+
 
 
 
